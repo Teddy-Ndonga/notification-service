@@ -1,0 +1,21 @@
+{
+  "name": "notification-service",
+  "version": "1.0.0",
+  "description": "A real-time notification service using Node.js, Redis, BullMQ, and WebSockets.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Teddy-Ndonga/notification-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Teddy-Ndonga/notification-service/issues"
+  },
+  "homepage": "https://github.com/Teddy-Ndonga/notification-service#readme"
+}
