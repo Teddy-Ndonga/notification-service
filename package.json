@@ -13,9 +13,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Teddy-Ndonga/notification-service/issues"
   },
-  "homepage": "https://github.com/Teddy-Ndonga/notification-service#readme"
+  "homepage": "https://github.com/Teddy-Ndonga/notification-service#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
 }
