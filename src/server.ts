@@ -13,6 +13,27 @@ export const io = new Server(httpServer, {
 io.on("connection", (socket) => {
   console.log(`Socket client connected: ${socket.id}`);
 
+  socket.on("join-recipient", (recipient: unknown) => {
+    if (typeof recipient !== "string" || recipient.trim() === "") {
+      socket.emit("socket-error", {
+        error: "A valid recipient is required.",
+      });
+      return;
+    }
+
+    const normalizedRecipient = recipient.trim().toLowerCase();
+    const room = `recipient:${normalizedRecipient}`;
+
+    socket.join(room);
+
+    console.log(`Socket ${socket.id} joined room: ${room}`);
+
+    socket.emit("joined-recipient", {
+      recipient: normalizedRecipient,
+      message: "Successfully joined recipient room.",
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log(`Socket client disconnected: ${socket.id}`);
   });
