@@ -61,4 +61,34 @@ app.post("/notifications", async (req, res) => {
   }
 });
 
+app.get("/notifications/:id", async (req, res) => {
+  try {
+    const jobId = String(req.params.id);
+    const job = await notificationQueue.getJob(jobId);
+
+    if (!job) {
+      return res.status(404).json({
+        error: "Notification job not found.",
+      });
+    }
+
+    const status = await job.getState();
+
+    return res.status(200).json({
+      jobId: job.id,
+      status,
+      recipient: job.data.recipient,
+      message: job.data.message,
+      attemptsMade: job.attemptsMade,
+      failedReason: job.failedReason || null,
+    });
+  } catch (error) {
+    console.error("Failed to retrieve notification status:", error);
+
+    return res.status(500).json({
+      error: "Failed to retrieve notification status.",
+    });
+  }
+});
+
 export default app;
