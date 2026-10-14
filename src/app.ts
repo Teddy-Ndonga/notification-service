@@ -32,7 +32,13 @@ app.post("/notifications", async (req, res) => {
       message: message.trim(),
     };
 
-    const job = await notificationQueue.add("send-notification", payload);
+    const job = await notificationQueue.add("send-notification", payload, {
+      attempts: 3,
+      backoff: {
+        type: "exponential",
+        delay: 1000,
+      },
+    });
 
     return res.status(202).json({
       message: "Notification queued successfully.",
