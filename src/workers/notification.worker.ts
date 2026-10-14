@@ -1,6 +1,7 @@
 import { Worker } from "bullmq";
 import { NotificationPayload } from "../types/notification.js";
 import { sendEmail } from "../services/email.service.js";
+import { sendInAppNotification } from "../services/in-app.service.js";
 
 const worker = new Worker<NotificationPayload>(
   "notifications",
@@ -12,7 +13,20 @@ const worker = new Worker<NotificationPayload>(
       throw new Error("Simulated notification delivery failure");
     }
 
-    await sendEmail(job.data);
+    switch (job.data.channel) {
+      case "email":
+        await sendEmail(job.data);
+        break;
+
+      case "in-app":
+        await sendInAppNotification(job.data);
+        break;
+
+      default:
+        throw new Error(
+          `Unsupported notification channel: ${job.data.channel}`,
+        );
+    }
 
     console.log("Notification processed successfully.");
   },

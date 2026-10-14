@@ -4,7 +4,7 @@ async function main() {
   const job = await notificationQueue.add("send-notification", {
     recipient: "teddy@example.com",
     message: "Your first queued notification!",
-    channel: "email",
+    channel: "in-app",
   });
 
   console.log(`Notification job added with ID: ${job.id}`);
