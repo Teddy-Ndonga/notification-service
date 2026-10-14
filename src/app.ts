@@ -92,4 +92,60 @@ app.get("/notifications/:id", async (req, res) => {
   }
 });
 
+app.post("/notifications/schedule", async (req, res) => {
+  const { recipient, message, channel, scheduledAt } = req.body ?? {};
+
+  if (
+    typeof recipient !== "string" ||
+    recipient.trim() === "" ||
+    typeof message !== "string" ||
+    message.trim() === "" ||
+    (channel !== "email" && channel !== "in-app") ||
+    typeof scheduledAt !== "string"
+  ) {
+    return res.status(400).json({
+      error:
+        "Recipient, message, a valid channel, and scheduledAt are required.",
+    });
+  }
+
+  const scheduledTime = new Date(scheduledAt).getTime();
+
+  if (!Number.isFinite(scheduledTime) || scheduledTime <= Date.now()) {
+    return res.status(400).json({
+      error: "scheduledAt must be a valid future date and time.",
+    });
+  }
+
+  try {
+    const payload: NotificationPayload = {
+      recipient: recipient.trim(),
+      message: message.trim(),
+      channel,
+    };
+
+    const delay = scheduledTime - Date.now();
+
+    const job = await notificationQueue.add("send-notification", payload, {
+      delay,
+      attempts: 3,
+      backoff: { type: "exponential", delay: 1000 },
+      removeOnComplete: { count: 1000 },
+      removeOnFail: { age: 24 * 60 * 60, count: 5000 },
+    });
+
+    return res.status(202).json({
+      message: "Notification scheduled successfully.",
+      jobId: job.id,
+      scheduledAt: new Date(scheduledTime).toISOString(),
+    });
+  } catch (error) {
+    console.error("Failed to schedule notification:", error);
+
+    return res.status(500).json({
+      error: "Failed to schedule notification.",
+    });
+  }
+});
+
 export default app;
