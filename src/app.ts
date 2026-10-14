@@ -38,6 +38,14 @@ app.post("/notifications", async (req, res) => {
         type: "exponential",
         delay: 1000,
       },
+      removeOnComplete: {
+        //Retain up to 1,000 recent completed jobs.
+        count: 1000,
+      },
+      removeOnFail: {
+        age: 24 * 60 * 60, //Allow failed jobs to be removed after 24 hours.
+        count: 5000, //Keep no more than 5,000 failed jobs.
+      },
     });
 
     return res.status(202).json({

@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "redis:test": "tsx scripts/redis-playground.ts",
     "worker": "tsx src/workers/notification.worker.ts",
-    "notification:test": "tsx scripts/add-notification.ts"
+    "notification:test": "tsx scripts/add-notification.ts",
+    "jobs:failed": "tsx scripts/inspect-failed-jobs.ts"
   },
   "repository": {
     "type": "git",
