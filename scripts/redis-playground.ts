@@ -1,4 +1,4 @@
-import { redis } from "./redis.js";
+import { redis } from "../src/redis.js";
 
 async function main() {
   try {

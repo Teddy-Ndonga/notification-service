@@ -8,7 +8,9 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "redis:test": "tsx src/redis-playground.ts"
+    "redis:test": "tsx scripts/redis-playground.ts",
+    "worker": "tsx src/workers/notification.worker.ts",
+    "notification:test": "tsx scripts/add-notification.ts"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "bullmq": "^6.3.15",
     "express": "^5.3.0",
     "ioredis": "^6.0.0"
   }
