@@ -30,6 +30,7 @@ app.post("/notifications", async (req, res) => {
     const payload: NotificationPayload = {
       recipient: recipient.trim(),
       message: message.trim(),
+      channel: "email",
     };
 
     const job = await notificationQueue.add("send-notification", payload, {
