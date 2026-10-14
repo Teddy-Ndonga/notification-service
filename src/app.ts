@@ -1,5 +1,6 @@
 import express from "express";
 import { notificationQueue } from "./queues/notification.queue.js";
+import { NotificationPayload } from "./types/notification.js";
 
 const app = express();
 
@@ -26,10 +27,12 @@ app.post("/notifications", async (req, res) => {
   }
 
   try {
-    const job = await notificationQueue.add("send-notification", {
+    const payload: NotificationPayload = {
       recipient: recipient.trim(),
       message: message.trim(),
-    });
+    };
+
+    const job = await notificationQueue.add("send-notification", payload);
 
     return res.status(202).json({
       message: "Notification queued successfully.",

@@ -1,6 +1,7 @@
 import { Worker } from "bullmq";
+import { NotificationPayload } from "../types/notification.js";
 
-const worker = new Worker(
+const worker = new Worker<NotificationPayload>(
   "notifications",
   async (job) => {
     console.log("Processing notification:", job.data);
