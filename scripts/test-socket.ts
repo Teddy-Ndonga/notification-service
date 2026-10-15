@@ -11,17 +11,25 @@ socket.on("connect", () => {
 
 socket.on("joined-recipient", (data) => {
   console.log("Room join successful:", data);
-  socket.disconnect();
+  console.log("Waiting for an in-app notification...");
 });
 
-socket.on("socket-error", (data) => {
-  console.error("Socket error:", data);
+socket.on("in-app-notification", (notification) => {
+  console.log("Received real-time notification!");
+  console.log(notification);
+
   socket.disconnect();
-  process.exitCode = 1;
+  process.exitCode = 0;
+});
+
+socket.on("socket-error", (error) => {
+  console.error("Socket error:", error);
 });
 
 socket.on("connect_error", (error) => {
-  console.error("Socket connection failed:", error.message);
-  process.exitCode = 1;
-  socket.disconnect();
+  console.error("Connection failed:", error.message);
+});
+
+socket.on("disconnect", (reason) => {
+  console.log("Disconnected:", reason);
 });

@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import app from "./app.js";
+import { startRedisSubscriber } from "./redis-subscriber.js";
 
 const httpServer = createServer(app);
 
@@ -9,6 +10,8 @@ export const io = new Server(httpServer, {
     origin: "*",
   },
 });
+
+const redisSubscriber = startRedisSubscriber(io);
 
 io.on("connection", (socket) => {
   console.log(`Socket client connected: ${socket.id}`);
