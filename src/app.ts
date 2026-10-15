@@ -13,16 +13,18 @@ app.get("/health", (_req, res) => {
 });
 
 app.post("/notifications", async (req, res) => {
-  const { recipient, message } = req.body;
+  const { recipient, message, channel } = req.body;
 
   if (
     typeof recipient !== "string" ||
     recipient.trim() === "" ||
     typeof message !== "string" ||
-    message.trim() === ""
+    message.trim() === "" ||
+    (channel !== "email" && channel !== "in-app")
   ) {
     return res.status(400).json({
-      error: "Recipient and message are required.",
+      error:
+        "Recipient, message, and a valid channel ('email' or 'in-app') are required.",
     });
   }
 
@@ -30,7 +32,7 @@ app.post("/notifications", async (req, res) => {
     const payload: NotificationPayload = {
       recipient: recipient.trim(),
       message: message.trim(),
-      channel: "email",
+      channel,
     };
 
     const job = await notificationQueue.add("send-notification", payload, {
@@ -52,6 +54,7 @@ app.post("/notifications", async (req, res) => {
     return res.status(202).json({
       message: "Notification queued successfully.",
       jobId: job.id,
+      channel: payload.channel,
     });
   } catch (error) {
     console.error("Failed to queue notification:", error);
